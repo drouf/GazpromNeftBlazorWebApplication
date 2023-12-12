@@ -1,0 +1,42 @@
+﻿@page "/"
+@using AutoMapper
+@using GazpromNeftBlazorWebApplication.DTO
+@using GazpromNeftBlazorWebApplication.Errors
+@using GazpromNeftBlazorWebApplication.Services
+@using GazpromNeftBlazorWebApplication.ViewModels
+@using GazpromNeftBlazorWebApplication.Components.Layout
+
+<PageTitle>Пользователи</PageTitle>
+
+<h1>Пользователи</h1>
+
+<button type="button" class="btn btn-success" @onclick="ShowAddUserModal">Добавить</button>
+<UserTable Users="@_users"></UserTable>
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
+    private IEnumerable<IndexUserModel> _users = new List<IndexUserModel>();
+
+    [Inject] public required IMapper Mapper { get; set; }
+    [Inject] public required ApiBroker ApiBroker { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUsersAsync();
+    }
+
+    private async Task GetUsersAsync()
+    {
+        var uri = "http://localhost:5167/User";
+        _users = await ApiBroker.Get<IEnumerable<IndexUserModel>>(uri);
+    }
+
+    private async Task ShowAddUserModal()
+    {
+        var addUserModal = Modal.Show<AddUserForm>();
+        var result = await addUserModal.Result;
+        if (result.Confirmed)
+        {
+            await GetUsersAsync();
+        }
+    }
+}

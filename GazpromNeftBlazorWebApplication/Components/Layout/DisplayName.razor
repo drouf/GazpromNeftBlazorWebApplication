@@ -1,0 +1,29 @@
+﻿@using System.Linq.Expressions
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+@using System.ComponentModel
+@typeparam T
+@if (ChildContent == null)
+{
+    <label>@label</label>
+}
+else
+{
+    <label>
+        @label
+        @ChildContent
+    </label>
+}
+@code {
+    [Parameter] public Expression<Func<T>> For { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private string label => GetDisplayName();
+
+    private string GetDisplayName()
+    {
+        var expression = (MemberExpression)For.Body;
+        var value = expression.Member.GetCustomAttribute(typeof(DisplayNameAttribute)) as DisplayNameAttribute;
+        return value?.DisplayName ?? expression.Member.Name ?? "";
+    }
+}

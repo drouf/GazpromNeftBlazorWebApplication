@@ -1,0 +1,76 @@
+﻿@using AutoMapper
+@using GazpromNeftBlazorWebApplication.DTO
+@using GazpromNeftBlazorWebApplication.Errors
+@using GazpromNeftBlazorWebApplication.Models
+@using GazpromNeftBlazorWebApplication.Services
+@using GazpromNeftBlazorWebApplication.ViewModels
+<div class="fields-enter-component__container">
+    <EditForm Model="_model" OnValidSubmit="SubmitForm">
+        <div class="fields-enter-component__field-container">
+            <DisplayName For="@(() => _model.LastName)" />
+            <InputText class="form-control" @bind-Value="_model.LastName" />
+            <ValidationError For="@(() => _model.LastName)" ErrorList="@_errors"></ValidationError>
+        </div>
+        <div class="fields-enter-component__field-container">
+            <DisplayName For="@(() => _model.FirstName)" />
+            <InputText class="form-control" @bind-Value="_model.FirstName" />
+            <ValidationError For="@(() => _model.FirstName)" ErrorList="@_errors"></ValidationError>
+        </div>
+        <div class="fields-enter-component__field-container">
+            <DisplayName For="@(() => _model.Patronymic)" />
+            <InputText class="form-control" @bind-Value="_model.Patronymic" />
+            <ValidationError For="@(() => _model.Patronymic)" ErrorList="@_errors"></ValidationError>
+        </div>
+        <div class="fields-enter-component__field-container">
+            <DisplayName For="@(() => _model.Phone)" />
+            <InputText class="form-control" @bind-Value="_model.Phone" />
+            <ValidationError For="@(() => _model.Phone)" ErrorList="@_errors"></ValidationError>
+        </div>
+        <div class="fields-enter-component__field-container">
+            <DisplayName For="@(() => _model.Email)" />
+            <InputText class="form-control" @bind-Value="_model.Email" />
+            <ValidationError For="@(() => _model.Email)" ErrorList="@_errors"></ValidationError>
+        </div>
+        <div class="fields-enter-component__buttons-container">
+            <button type="submit" class="btn btn-success">Создать</button>
+            <button type="button" @onclick="Cancel" class="btn btn-danger">Выход</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private readonly AddUserModel _model = new();
+    [Inject]
+    public required ApiBroker ApiBroker { get; set; }
+    [Inject]
+    public required IMapper Mapper { get; set; }
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    private List<ValidationErrorModel> _errors = new List<ValidationErrorModel>();
+
+    protected override void OnInitialized() => BlazoredModal.SetTitle("Введите данные пользователя");
+
+    private async Task SubmitForm()
+    {
+        if(await AddUser())
+        {
+            await BlazoredModal.CloseAsync(ModalResult.Ok(_model.FirstName));
+        }
+    }
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+
+    private async Task<bool> AddUser()
+    {
+        var uri = "http://localhost:5167/User";
+        try
+        {
+            await ApiBroker.Post<UserDto>(uri, _model);
+            return true;
+        }
+        catch(ApiBrokerException abe)
+        {
+            _errors = abe.Errors.ToList();
+            return false;
+        }
+    }
+}

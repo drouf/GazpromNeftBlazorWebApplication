@@ -1,0 +1,44 @@
+﻿@using GazpromNeftBlazorWebApplication.ViewModels
+<table class="table table table-bordered">
+    @foreach(var user in Users)
+    {
+        <tr>
+            <td>
+                @user.Id
+            </td>
+            <td>
+                @user.LastName
+            </td>
+            <td>
+                @user.FirstName
+            </td>
+            <td>
+                @user.Patronymic
+            </td>
+            <td>
+                @user.Phone
+            </td>
+            <td>
+                @user.Email
+            </td>
+            <td>
+                <button type="button" class="btn btn-outline-warning" @onclick="AddUser">Изменить</button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-outline-danger" @onclick="AddUser">Удалить</button>
+            </td>
+        </tr>
+    }
+</table>
+
+@code {
+    [Inject]
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
+    [Parameter] public IEnumerable<IndexUserModel> Users { get; set; } = new List<IndexUserModel>();
+
+    private async Task AddUser()
+    {
+        var addUserModal = Modal.Show<AddUserForm>();
+        var result = await addUserModal.Result;
+    }
+}

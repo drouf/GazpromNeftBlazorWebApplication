@@ -1,0 +1,31 @@
+﻿@using System.Linq.Expressions
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+@using System.ComponentModel
+@using GazpromNeftBlazorWebApplication.Models
+@typeparam T
+@foreach(var error in _memberErrors)
+{
+    <span class="@spanClass">@error.ErrorMessage</span>
+}
+
+@code {
+    [Parameter] public Expression<Func<T>> For { get; set; }
+    [Parameter]
+    [Required]
+    public IEnumerable<ValidationErrorModel> ErrorList { get; set; } = new List<ValidationErrorModel>();
+    [Parameter] public string spanClass { get; set; } = "text-danger";
+    private IEnumerable<ValidationErrorModel> _memberErrors => GetError();
+
+    protected override void OnInitialized()
+    {
+        GetError();
+    }
+
+    private IEnumerable<ValidationErrorModel> GetError()
+    {
+        var expression = (MemberExpression)For.Body;
+        var memberName = expression.Member.Name;
+        return ErrorList.Where(e => e.PropertyName.Equals(memberName));
+    }
+}

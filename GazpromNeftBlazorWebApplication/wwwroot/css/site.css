@@ -78,7 +78,7 @@ a, .btn-link {
 }
 
 .fields-enter-component__field-container :not(:last-child) {
-    padding: 0.5rem;
+    padding: 0.5rem 0 0.5rem 0;
 }
 
 .fields-enter-component__buttons-container {
@@ -89,13 +89,13 @@ a, .btn-link {
 }
 
 .fields-enter-component__button-container {
-    padding: 0 5px 0 5px;
+    padding: 0 0 0 1.5rem;
 }
 
-.table__container{
-    padding: 20px 0 20px 0;
+.table__container {
+    padding: 1.5rem 0 1.5rem 0;
 }
 
 .table__cell-container {
-    padding: 5px;
+    padding: 0.5rem;
 }

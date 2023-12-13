@@ -1,44 +1,81 @@
 ﻿@using GazpromNeftBlazorWebApplication.ViewModels
-<table class="table table table-bordered">
-    @foreach(var user in Users)
-    {
-        <tr>
-            <td>
-                @user.Id
-            </td>
-            <td>
-                @user.LastName
-            </td>
-            <td>
-                @user.FirstName
-            </td>
-            <td>
-                @user.Patronymic
-            </td>
-            <td>
-                @user.Phone
-            </td>
-            <td>
-                @user.Email
-            </td>
-            <td>
-                <button type="button" class="btn btn-outline-warning" @onclick="AddUser">Изменить</button>
-            </td>
-            <td>
-                <button type="button" class="btn btn-outline-danger" @onclick="AddUser">Удалить</button>
-            </td>
-        </tr>
-    }
-</table>
+<div class="table__container">
+    <table class="table table table-bordered">
+        <TableHead ObjectType="typeof(IndexUserModel)"></TableHead>
+        @foreach (var user in Users)
+        {
+            <tr>
+                <td>
+                    <div class="table__cell-container d-flex justify-content-center align-items-center">
+                        @user.Id
+                    </div>
+                </td>
+                <td>
+                    <div class="table__cell-container d-flex justify-content-start align-items-center">
+                        @user.LastName
+                    </div>
+                </td>
+                <td>
+                    <div class="table__cell-container d-flex justify-content-start align-items-center">
+                        @user.FirstName
+                    </div>
+                </td>
+                <td>
+                    <div class="table__cell-container d-flex justify-content-start align-items-center">
+                        @user.Patronymic
+                    </div>
+                </td>
+                <td>
+                    <div class="table__cell-container d-flex justify-content-start align-items-center">
+                        @user.Phone
+                    </div>
+                </td>
+                <td>
+                    <div class="table__cell-container d-flex justify-content-start align-items-center">
+                        @user.Email
+                    </div>
+                </td>
+                <td>
+                    <div class="table__cell-container d-flex justify-content-center align-items-center">
+                        <button type="button" class="btn btn-warning" @onclick="@(async () => await ShowEditUserModal(user))">Изменить</button>
+                    </div>
+                </td>
+                <td>
+                    <div class="table__cell-container d-flex justify-content-center align-items-center">
+                        <button type="button" class="btn btn-danger" @onclick="@(async () => await ShowDeleteUserModal(user))">Удалить</button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
 
 @code {
     [Inject]
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
-    [Parameter] public IEnumerable<IndexUserModel> Users { get; set; } = new List<IndexUserModel>();
+    [Parameter] public required IEnumerable<IndexUserModel> Users { get; set; }
+    [Parameter] public required GetUsers GetUsersAsync { get; set; }
+    public delegate Task<IEnumerable<IndexUserModel>> GetUsers();
 
-    private async Task AddUser()
+    private async Task ShowEditUserModal(IndexUserModel user)
     {
-        var addUserModal = Modal.Show<AddUserForm>();
-        var result = await addUserModal.Result;
+        var editUserModal = Modal.Show<EditUserForm>("Редактирование пользователя", new ModalParameters()
+            .Add(nameof(EditUserForm.UserModel), user));
+        var result = await editUserModal.Result;
+        if (result.Confirmed)
+        {
+            Users = await GetUsersAsync.Invoke();
+        }
+    }
+
+    private async Task ShowDeleteUserModal(IndexUserModel user)
+    {
+        var deleteUserModal = Modal.Show<DeleteUserForm>("Подтверждение удаления пользователя", new ModalParameters()
+            .Add(nameof(DeleteUserForm.UserModel), user));
+        var result = await deleteUserModal.Result;
+        if (result.Confirmed)
+        {
+            Users = await GetUsersAsync.Invoke();
+        }
     }
 }

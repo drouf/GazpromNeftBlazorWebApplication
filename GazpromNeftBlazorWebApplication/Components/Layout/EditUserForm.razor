@@ -5,72 +5,73 @@
 @using GazpromNeftBlazorWebApplication.Services
 @using GazpromNeftBlazorWebApplication.ViewModels
 <div class="fields-enter-component__container">
-    <EditForm Model="_model" OnValidSubmit="SubmitForm">
+    <EditForm Model=" _model" OnValidSubmit="SubmitForm">
         <div class="fields-enter-component__field-container">
-            <DisplayName For="@(() => _model.LastName)" />
-            <InputText class="form-control" @bind-Value="_model.LastName" />
-            <ValidationError For="@(() => _model.LastName)" ErrorList="@_errors"></ValidationError>
+            <DisplayName For="@(() =>  _model.LastName)" />
+            <InputText class="form-control" @bind-Value=" _model.LastName" />
+            <ValidationError For="@(() =>  _model.LastName)" ErrorList="@_errors"></ValidationError>
         </div>
         <div class="fields-enter-component__field-container">
-            <DisplayName For="@(() => _model.FirstName)" />
-            <InputText class="form-control" @bind-Value="_model.FirstName" />
-            <ValidationError For="@(() => _model.FirstName)" ErrorList="@_errors"></ValidationError>
+            <DisplayName For="@(() =>  _model.FirstName)" />
+            <InputText class="form-control" @bind-Value=" _model.FirstName" />
+            <ValidationError For="@(() =>  _model.FirstName)" ErrorList="@_errors"></ValidationError>
         </div>
         <div class="fields-enter-component__field-container">
-            <DisplayName For="@(() => _model.Patronymic)" />
-            <InputText class="form-control" @bind-Value="_model.Patronymic" />
-            <ValidationError For="@(() => _model.Patronymic)" ErrorList="@_errors"></ValidationError>
+            <DisplayName For="@(() =>  _model.Patronymic)" />
+            <InputText class="form-control" @bind-Value=" _model.Patronymic" />
+            <ValidationError For="@(() =>  _model.Patronymic)" ErrorList="@_errors"></ValidationError>
         </div>
         <div class="fields-enter-component__field-container">
-            <DisplayName For="@(() => _model.Phone)" />
-            <InputText class="form-control" @bind-Value="_model.Phone" />
-            <ValidationError For="@(() => _model.Phone)" ErrorList="@_errors"></ValidationError>
+            <DisplayName For="@(() =>  _model.Phone)" />
+            <InputText class="form-control" @bind-Value=" _model.Phone" />
+            <ValidationError For="@(() =>  _model.Phone)" ErrorList="@_errors"></ValidationError>
         </div>
         <div class="fields-enter-component__field-container">
-            <DisplayName For="@(() => _model.Email)" />
-            <InputText class="form-control" @bind-Value="_model.Email" />
-            <ValidationError For="@(() => _model.Email)" ErrorList="@_errors"></ValidationError>
+            <DisplayName For="@(() =>  _model.Email)" />
+            <InputText class="form-control" @bind-Value=" _model.Email" />
+            <ValidationError For="@(() =>  _model.Email)" ErrorList="@_errors"></ValidationError>
         </div>
         <div class="fields-enter-component__buttons-container">
-            <div class="fields-enter-component__button-container">
-                <button type="submit" class="btn btn-success">Создать</button>
-            </div>
-            <div class="fields-enter-component__button-container">
-                <button type="button" @onclick="Cancel" class="btn btn-danger">Отмена</button>
-            </div>
+            <button type="submit" class="btn btn-success">Изменить</button>
+            <button type="button" @onclick="Cancel" class="btn btn-danger">Отмена</button>
         </div>
     </EditForm>
 </div>
 
 @code {
-    private readonly AddUserModel _model = new();
-    [Inject]
-    public required ApiBroker ApiBroker { get; set; }
     [Inject]
     public required IMapper Mapper { get; set; }
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
+    [Parameter]
+    public required IndexUserModel UserModel { get; set; }
+    private EditUserModel _model = new();
+    [Inject]
+    public required ApiBroker ApiBroker { get; set; }
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     private List<ValidationErrorModel> _errors = new List<ValidationErrorModel>();
 
-    protected override void OnInitialized() => BlazoredModal.SetTitle("Введите данные пользователя");
+    protected override void OnInitialized(){
+        BlazoredModal.SetTitle("Введите данные пользователя");
+        _model = Mapper.Map<IndexUserModel, EditUserModel>(UserModel);
+    }
 
     private async Task SubmitForm()
     {
-        if(await AddUser())
+        if (await EditUser())
         {
-            await BlazoredModal.CloseAsync(ModalResult.Ok(_model.FirstName));
+            await BlazoredModal.CloseAsync(ModalResult.Ok( _model.FirstName));
         }
     }
     private async Task Cancel() => await BlazoredModal.CancelAsync();
 
-    private async Task<bool> AddUser()
+    private async Task<bool> EditUser()
     {
         var uri = "http://localhost:5167/User";
-        var dto = Mapper.Map<AddUserModel, AddUserDto>(_model);
+        var dto = Mapper.Map<EditUserModel, EditUserDto>(_model);
         try
         {
-            await ApiBroker.Post<UserDto, AddUserDto>(uri, dto);
+            await ApiBroker.Put<UserDto, EditUserDto>(uri, dto);
             return true;
         }
         catch(ApiBrokerException abe)

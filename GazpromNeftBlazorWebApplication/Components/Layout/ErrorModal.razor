@@ -1,0 +1,16 @@
+﻿<div class="fields-enter-component__container">
+    <div class="fields-enter-component__buttons-container">
+        <button type="button" @onclick="Cancel" class="btn btn-success">ОК</button>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrEmpty(BlazoredModal.Title))
+            BlazoredModal.SetTitle("Произошла ошибка");
+    }
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+}

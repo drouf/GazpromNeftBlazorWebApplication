@@ -70,7 +70,10 @@
 
     private async Task ShowDeleteUserModal(IndexUserModel user)
     {
-        var deleteUserModal = Modal.Show<DeleteUserForm>("Подтверждение удаления пользователя", new ModalParameters()
+        var title = "Вы действительно хотите удалить пользователя " +
+        $"(#{user.Id}) {user.LastName} {user.FirstName}" +
+        $"{(!string.IsNullOrEmpty(user.Patronymic) ? $" {user.Patronymic}" : "")}?";
+        var deleteUserModal = Modal.Show<DeleteUserForm>(title, new ModalParameters()
             .Add(nameof(DeleteUserForm.UserModel), user));
         var result = await deleteUserModal.Result;
         if (result.Confirmed)

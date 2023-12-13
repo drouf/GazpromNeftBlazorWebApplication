@@ -1,6 +1,6 @@
 ﻿using GazpromNeftBlazorWebApplication.Models;
 
-namespace GazpromNeftBlazorWebApplication.Errors
+namespace GazpromNeftBlazorWebApplication.Exceptions
 {
     public class ApiBrokerException : Exception
     {

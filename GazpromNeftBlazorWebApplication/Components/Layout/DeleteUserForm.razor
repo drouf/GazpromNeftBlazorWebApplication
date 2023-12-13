@@ -7,8 +7,12 @@
 <div class="fields-enter-component__container">
     <EditForm Model="_model" OnValidSubmit="SubmitForm">
         <div class="fields-enter-component__buttons-container">
-            <button type="submit" class="btn btn-danger">Удалить</button>
-            <button type="button" @onclick="Cancel" class="btn btn-success">Отмена</button>
+            <div class="fields-enter-component__button-container">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+            </div>
+            <div class="fields-enter-component__button-container">
+                <button type="button" @onclick="Cancel" class="btn btn-success">Отмена</button>
+            </div>
         </div>
     </EditForm>
 </div>
@@ -48,7 +52,7 @@
         var dto = Mapper.Map<DeleteUserModel, DeleteUserDto>(_model);
         try
         {
-            await ApiBroker.Delete<UserDto, DeleteUserDto>(uri, dto);
+            await ApiBroker.Delete<DeleteUserDto>(uri, dto);
             return true;
         }
         catch (InternalServerErrorException isee)

@@ -58,7 +58,7 @@ namespace GazpromNeftBlazorWebApplication.Services
             }
         }
 
-        public override async Task Delete<TResponse, TData>(string url, TData content) where TData : class
+        public override async Task Delete<TData>(string url, TData content) where TData : class
         {
             using (var client = new HttpClient())
             {

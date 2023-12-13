@@ -11,6 +11,11 @@ namespace GazpromNeftBlazorWebApplication
         {
             CreateMap<UserDto, IndexUserModel> ();
             CreateMap<ValidationErrorDto, ValidationErrorModel> ();
+            CreateMap<IndexUserModel, EditUserModel>();
+            CreateMap<IndexUserModel, DeleteUserModel>();
+            CreateMap<AddUserModel, AddUserDto>();
+            CreateMap<EditUserModel, EditUserDto>();
+            CreateMap<DeleteUserModel, DeleteUserDto>();
         }
     }
 }

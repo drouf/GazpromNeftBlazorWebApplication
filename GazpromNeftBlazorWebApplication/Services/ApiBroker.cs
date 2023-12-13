@@ -10,6 +10,6 @@
 
         public abstract Task<TResponse> Patch<TResponse, TData>(string url, TData content) where TData : class;
 
-        public abstract Task Delete<TResponse, TData>(string url, TData content) where TData : class;
+        public abstract Task Delete<TData>(string url, TData content) where TData : class;
     }
 }

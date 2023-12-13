@@ -32,8 +32,12 @@
             <ValidationError For="@(() =>  _model.Email)" ErrorList="@_errors"></ValidationError>
         </div>
         <div class="fields-enter-component__buttons-container">
-            <button type="submit" class="btn btn-success">Изменить</button>
-            <button type="button" @onclick="Cancel" class="btn btn-danger">Отмена</button>
+            <div class="fields-enter-component__button-container">
+                <button type="submit" class="btn btn-success">Изменить</button>
+            </div>
+            <div class="fields-enter-component__button-container">
+                <button type="button" @onclick="Cancel" class="btn btn-danger">Отмена</button>
+            </div>
         </div>
     </EditForm>
 </div>

@@ -77,8 +77,25 @@ a, .btn-link {
     flex-direction: column;
 }
 
+.fields-enter-component__field-container :not(:last-child) {
+    padding: 0.5rem;
+}
+
 .fields-enter-component__buttons-container {
     display: flex;
     flex-direction: row;
     justify-content:end;
+    padding-top: 1.5rem;
+}
+
+.fields-enter-component__button-container {
+    padding: 0 5px 0 5px;
+}
+
+.table__container{
+    padding: 20px 0 20px 0;
+}
+
+.table__cell-container {
+    padding: 5px;
 }

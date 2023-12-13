@@ -1,0 +1,41 @@
+﻿@using System.ComponentModel
+@using GazpromNeftBlazorWebApplication.ViewModels
+@using System.Reflection
+<thead>
+    <tr>
+        @foreach (var name in _columnNames)
+        {
+            
+            <th>
+                <div class="table__cell-container d-flex justify-content-center align-items-center">
+                    @name
+                </div>
+            </th>
+        }
+        <th></th>
+        <th></th>
+    </tr>
+</thead>
+
+@code {
+    [Parameter] public required Type ObjectType { get; set; }
+    private IEnumerable<string> _columnNames => GetColumns();
+
+    private IEnumerable<string> GetColumns()
+    {
+        return ObjectType.GetProperties().Select(p => GetDisplayName(p));
+    }
+
+    private string GetDisplayName(PropertyInfo property)
+    {
+        var attribute = property.GetCustomAttribute(typeof(DisplayNameAttribute)) as DisplayNameAttribute;
+        if (attribute != null)
+        {
+            return attribute.DisplayName;
+        }
+        else
+        {
+            return property.Name;
+        }
+    }
+}

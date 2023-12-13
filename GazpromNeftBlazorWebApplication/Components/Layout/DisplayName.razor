@@ -15,8 +15,8 @@ else
     </label>
 }
 @code {
-    [Parameter] public Expression<Func<T>> For { get; set; }
-    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public required Expression<Func<T>> For { get; set; }
+    [Parameter] public required RenderFragment ChildContent { get; set; }
 
     private string label => GetDisplayName();
 

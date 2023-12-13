@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using AutoMapper
 @using GazpromNeftBlazorWebApplication.DTO
-@using GazpromNeftBlazorWebApplication.Errors
+@using GazpromNeftBlazorWebApplication.Exceptions
 @using GazpromNeftBlazorWebApplication.Services
 @using GazpromNeftBlazorWebApplication.ViewModels
 @using GazpromNeftBlazorWebApplication.Components.Layout
@@ -11,23 +11,54 @@
 <h1>Пользователи</h1>
 
 <button type="button" class="btn btn-success" @onclick="ShowAddUserModal">Добавить</button>
-<UserTable Users="@_users"></UserTable>
+@if (_users.Any())
+{
+    <UserTable Users="@_users" GetUsersAsync="GetUsersAsync"></UserTable>
+}
+else
+{
+    <div>
+        <span>Нет пользователей</span>
+    </div>
+}
 
 @code {
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
     private IEnumerable<IndexUserModel> _users = new List<IndexUserModel>();
-
     [Inject] public required IMapper Mapper { get; set; }
     [Inject] public required ApiBroker ApiBroker { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        await GetUsersAsync();
+        await RefreshUsers();
     }
 
-    private async Task GetUsersAsync()
+    public async Task RefreshUsers()
+    {
+        _users = await GetUsersAsync();
+    }
+
+    public async Task<IEnumerable<IndexUserModel>> GetUsersAsync()
     {
         var uri = "http://localhost:5167/User";
-        _users = await ApiBroker.Get<IEnumerable<IndexUserModel>>(uri);
+        var dto = new GetUserDto() {Id = null};
+        try
+        {
+            return await ApiBroker.Get<IEnumerable<IndexUserModel>, GetUserDto>(uri, dto);
+        }
+        catch (InternalServerErrorException isee)
+        {
+            Console.WriteLine(isee);
+            var errorModal = Modal.Show<ErrorModal>("Произошла внутренняя ошибка сервера");
+            var result = await errorModal.Result;
+            return new List<IndexUserModel>();
+        }
+        catch (HttpRequestException hrex)
+        {
+            Console.WriteLine(hrex);
+            var errorModal = Modal.Show<ErrorModal>("Произошла ошибка во время выполнения HTTP-запроса");
+            var result = await errorModal.Result;
+            return new List<IndexUserModel>();
+        }
     }
 
     private async Task ShowAddUserModal()
@@ -36,7 +67,7 @@
         var result = await addUserModal.Result;
         if (result.Confirmed)
         {
-            await GetUsersAsync();
+            await RefreshUsers();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace GazpromNeftBlazorWebApplication.Exceptions
 {
-    public class ApiBrokerException : Exception
+    public class ApiServiceException : Exception
     {
         public IEnumerable<ValidationErrorModel> Errors { get; set; } = new List<ValidationErrorModel>();
     }

@@ -1,6 +1,6 @@
 ﻿namespace GazpromNeftBlazorWebApplication.Services
 {
-    public abstract class ApiBroker
+    public abstract class ApiService
     {
         public abstract Task<TResponse> Get<TResponse, TData>(string url, TData content) where TData : class;
 

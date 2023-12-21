@@ -6,10 +6,10 @@ using GazpromNeftBlazorWebApplication.Models;
 
 namespace GazpromNeftBlazorWebApplication.Services
 {
-    public class GazpromNeftApiBroker : ApiBroker
+    public class GazpromNeftApiService : ApiService
     {
         private readonly IMapper _mapper;
-        public GazpromNeftApiBroker(IMapper mapper)
+        public GazpromNeftApiService(IMapper mapper)
         {
             _mapper = mapper;
         }
@@ -75,7 +75,7 @@ namespace GazpromNeftBlazorWebApplication.Services
                     .Map<IEnumerable<ValidationErrorDto>, List<ValidationErrorModel>>
                     (await response.Content.ReadFromJsonAsync<IEnumerable<ValidationErrorDto>>()
                         ?? new List<ValidationErrorDto>());
-                throw new ApiBrokerException() { Errors = validationErrors };
+                throw new ApiServiceException() { Errors = validationErrors };
             }
             if(response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
             {

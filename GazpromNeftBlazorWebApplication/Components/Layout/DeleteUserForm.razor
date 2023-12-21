@@ -25,7 +25,8 @@
     public required IndexUserModel UserModel { get; set; }
     private DeleteUserModel _model = new();
     [Inject]
-    public required ApiBroker ApiBroker { get; set; }
+    public required ApiService ApiService { get; set; }
+    [Inject] public required ApiEndpointManagerService ApiEndpoints { get; set; }
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     private List<ValidationErrorModel> _errors = new List<ValidationErrorModel>();
@@ -48,11 +49,11 @@
 
     private async Task<bool> DeleteUser()
     {
-        var uri = "http://localhost:5167/User";
+        var uri = ApiEndpoints.GetEndpointUrl("User");
         var dto = Mapper.Map<DeleteUserModel, DeleteUserDto>(_model);
         try
         {
-            await ApiBroker.Delete<DeleteUserDto>(uri, dto);
+            await ApiService.Delete<DeleteUserDto>(uri, dto);
             return true;
         }
         catch (InternalServerErrorException isee)

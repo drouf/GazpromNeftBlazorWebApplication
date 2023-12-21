@@ -12,10 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddBlazoredModal();
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
-builder.Services.AddTransient<ApiBroker, GazpromNeftApiBroker>();
+builder.Services.AddTransient<ApiService, GazpromNeftApiService>();
+builder.Services.AddSingleton(x => new ApiEndpointManagerService() 
+    { ApiEndpoints = new List<ApiEndpoint>() { 
+        new ApiEndpoint() { EndpointName = "User", EndpointUrl = "http://172.19.0.3:8080/User"} 
+    } 
+});
 
 var app = builder.Build();
 

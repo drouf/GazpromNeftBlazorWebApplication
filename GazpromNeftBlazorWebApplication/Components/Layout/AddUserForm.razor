@@ -45,9 +45,10 @@
 @code {
     private readonly AddUserModel _model = new();
     [Inject]
-    public required ApiBroker ApiBroker { get; set; }
+    public required ApiService ApiService { get; set; }
     [Inject]
     public required IMapper Mapper { get; set; }
+    [Inject] public required ApiEndpointManagerService ApiEndpoints { get; set; }
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
@@ -66,14 +67,14 @@
 
     private async Task<bool> AddUser()
     {
-        var uri = "http://localhost:5167/User";
+        var uri = ApiEndpoints.GetEndpointUrl("User");
         var dto = Mapper.Map<AddUserModel, AddUserDto>(_model);
         try
         {
-            await ApiBroker.Post<UserDto, AddUserDto>(uri, dto);
+            await ApiService.Post<UserDto, AddUserDto>(uri, dto);
             return true;
         }
-        catch(ApiBrokerException abe)
+        catch(ApiServiceException abe)
         {
             _errors = abe.Errors.ToList();
             return false;

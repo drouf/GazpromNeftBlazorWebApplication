@@ -50,7 +50,8 @@
     public required IndexUserModel UserModel { get; set; }
     private EditUserModel _model = new();
     [Inject]
-    public required ApiBroker ApiBroker { get; set; }
+    public required ApiService ApiService { get; set; }
+    [Inject] public required ApiEndpointManagerService ApiEndpoints { get; set; }
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     private List<ValidationErrorModel> _errors = new List<ValidationErrorModel>();
@@ -71,14 +72,14 @@
 
     private async Task<bool> EditUser()
     {
-        var uri = "http://localhost:5167/User";
+        var uri = ApiEndpoints.GetEndpointUrl("User");
         var dto = Mapper.Map<EditUserModel, EditUserDto>(_model);
         try
         {
-            await ApiBroker.Put<UserDto, EditUserDto>(uri, dto);
+            await ApiService.Put<UserDto, EditUserDto>(uri, dto);
             return true;
         }
-        catch(ApiBrokerException abe)
+        catch(ApiServiceException abe)
         {
             _errors = abe.Errors.ToList();
             return false;

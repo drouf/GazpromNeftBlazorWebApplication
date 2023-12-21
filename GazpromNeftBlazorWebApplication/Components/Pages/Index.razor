@@ -26,7 +26,8 @@ else
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
     private IEnumerable<IndexUserModel> _users = new List<IndexUserModel>();
     [Inject] public required IMapper Mapper { get; set; }
-    [Inject] public required ApiBroker ApiBroker { get; set; }
+    [Inject] public required ApiService ApiService { get; set; }
+    [Inject] public required ApiEndpointManagerService ApiEndpoints { get; set; }
     protected override async Task OnInitializedAsync()
     {
         await RefreshUsers();
@@ -39,11 +40,12 @@ else
 
     public async Task<IEnumerable<IndexUserModel>> GetUsersAsync()
     {
-        var uri = "http://localhost:5167/User";
+        var uri = ApiEndpoints.GetEndpointUrl("User");
+        Console.WriteLine(uri);
         var dto = new GetUserDto() {Id = null};
         try
         {
-            return await ApiBroker.Get<IEnumerable<IndexUserModel>, GetUserDto>(uri, dto);
+            return await ApiService.Get<IEnumerable<IndexUserModel>, GetUserDto>(uri, dto);
         }
         catch (InternalServerErrorException isee)
         {

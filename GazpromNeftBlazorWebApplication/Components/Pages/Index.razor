@@ -47,16 +47,16 @@ else
         {
             return await ApiService.Get<IEnumerable<IndexUserModel>, GetUserQuery>(uri, dto);
         }
-        catch (InternalServerErrorException isee)
+        catch (InternalServerErrorException ex)
         {
-            Console.WriteLine(isee);
+            Console.WriteLine(ex);
             var errorModal = Modal.Show<ErrorModal>("Произошла внутренняя ошибка сервера");
             var result = await errorModal.Result;
             return new List<IndexUserModel>();
         }
-        catch (HttpRequestException hrex)
+        catch (HttpRequestException ex)
         {
-            Console.WriteLine(hrex);
+            Console.WriteLine(ex);
             var errorModal = Modal.Show<ErrorModal>("Произошла ошибка во время выполнения HTTP-запроса");
             var result = await errorModal.Result;
             return new List<IndexUserModel>();

@@ -2,7 +2,6 @@
 using GazpromNeftBlazorWebApplication.DTO;
 using GazpromNeftBlazorWebApplication.Exceptions;
 using GazpromNeftBlazorWebApplication.Extensions;
-using GazpromNeftBlazorWebApplication.Models;
 
 namespace GazpromNeftBlazorWebApplication.Services
 {
@@ -71,11 +70,7 @@ namespace GazpromNeftBlazorWebApplication.Services
             if (response.IsSuccessStatusCode) return;
             if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                var validationErrors = _mapper
-                    .Map<IEnumerable<ValidationErrorDto>, List<ValidationErrorModel>>
-                    (await response.Content.ReadFromJsonAsync<IEnumerable<ValidationErrorDto>>()
-                        ?? new List<ValidationErrorDto>());
-                throw new ApiServiceException() { Errors = validationErrors };
+                throw new ApiServiceException() { Errors = await response.Content.ReadFromJsonAsync<IEnumerable<ValidationErrorDto>>() ?? new List<ValidationErrorDto>() };
             }
             if(response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
             {

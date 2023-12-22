@@ -2,7 +2,7 @@
 @using System.Reflection
 @using System.ComponentModel.DataAnnotations
 @using System.ComponentModel
-@using GazpromNeftBlazorWebApplication.Models
+@using GazpromNeftBlazorWebApplication.DTO
 @typeparam T
 @foreach(var error in _memberErrors)
 {
@@ -13,16 +13,16 @@
     [Parameter] public Expression<Func<T>> For { get; set; }
     [Parameter]
     [Required]
-    public IEnumerable<ValidationErrorModel> ErrorList { get; set; } = new List<ValidationErrorModel>();
+    public IEnumerable<ValidationErrorDto> ErrorList { get; set; } = new List<ValidationErrorDto>();
     [Parameter] public string spanClass { get; set; } = "text-danger";
-    private IEnumerable<ValidationErrorModel> _memberErrors => GetError();
+    private IEnumerable<ValidationErrorDto> _memberErrors => GetError();
 
     protected override void OnInitialized()
     {
         GetError();
     }
 
-    private IEnumerable<ValidationErrorModel> GetError()
+    private IEnumerable<ValidationErrorDto> GetError()
     {
         var expression = (MemberExpression)For.Body;
         var memberName = expression.Member.Name;

@@ -3,7 +3,7 @@
 @using System.Reflection
 <thead>
     <tr>
-        @foreach (var name in _columnNames)
+        @foreach (var name in ColumnNames)
         {
             
             <th>
@@ -19,7 +19,7 @@
 
 @code {
     [Parameter] public required Type ObjectType { get; set; }
-    private IEnumerable<string> _columnNames => GetColumns();
+    private IEnumerable<string> ColumnNames => GetColumns();
 
     private IEnumerable<string> GetColumns()
     {

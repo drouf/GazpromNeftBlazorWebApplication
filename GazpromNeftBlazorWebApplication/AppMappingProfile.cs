@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using GazpromNeftBlazorWebApplication.DTO;
-using GazpromNeftBlazorWebApplication.Models;
 using GazpromNeftBlazorWebApplication.ViewModels;
 
 namespace GazpromNeftBlazorWebApplication
@@ -10,7 +9,6 @@ namespace GazpromNeftBlazorWebApplication
         public AppMappingProfile()
         {
             CreateMap<UserDto, IndexUserModel> ();
-            CreateMap<ValidationErrorDto, ValidationErrorModel> ();
             CreateMap<IndexUserModel, EditUserModel>();
             CreateMap<IndexUserModel, DeleteUserModel>();
             CreateMap<AddUserModel, AddUserCommand>();

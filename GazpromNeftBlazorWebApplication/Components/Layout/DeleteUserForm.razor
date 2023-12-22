@@ -50,10 +50,10 @@
     private async Task<bool> DeleteUser()
     {
         var uri = ApiEndpoints.GetEndpointUrl("User");
-        var dto = Mapper.Map<DeleteUserModel, DeleteUserDto>(_model);
+        var dto = Mapper.Map<DeleteUserModel, DeleteUserCommand>(_model);
         try
         {
-            await ApiService.Delete<DeleteUserDto>(uri, dto);
+            await ApiService.Delete<DeleteUserCommand>(uri, dto);
             return true;
         }
         catch (InternalServerErrorException isee)

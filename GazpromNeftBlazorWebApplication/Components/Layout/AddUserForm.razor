@@ -68,10 +68,10 @@
     private async Task<bool> AddUser()
     {
         var uri = ApiEndpoints.GetEndpointUrl("User");
-        var dto = Mapper.Map<AddUserModel, AddUserDto>(_model);
+        var dto = Mapper.Map<AddUserModel, AddUserCommand>(_model);
         try
         {
-            await ApiService.Post<UserDto, AddUserDto>(uri, dto);
+            await ApiService.Post<UserDto, AddUserCommand>(uri, dto);
             return true;
         }
         catch(ApiServiceException abe)

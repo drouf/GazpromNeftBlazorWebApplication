@@ -42,10 +42,10 @@ else
     {
         var uri = ApiEndpoints.GetEndpointUrl("User");
         Console.WriteLine(uri);
-        var dto = new GetUserDto() {Id = null};
+        var dto = new GetUserQuery() {Id = null};
         try
         {
-            return await ApiService.Get<IEnumerable<IndexUserModel>, GetUserDto>(uri, dto);
+            return await ApiService.Get<IEnumerable<IndexUserModel>, GetUserQuery>(uri, dto);
         }
         catch (InternalServerErrorException isee)
         {

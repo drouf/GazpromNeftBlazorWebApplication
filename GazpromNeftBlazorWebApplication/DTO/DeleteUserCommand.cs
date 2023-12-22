@@ -1,6 +1,6 @@
 ﻿namespace GazpromNeftBlazorWebApplication.DTO
 {
-    public class DeleteUserDto
+    public class DeleteUserCommand
     {
         public long Id { get; set; }
     }

@@ -73,10 +73,10 @@
     private async Task<bool> EditUser()
     {
         var uri = ApiEndpoints.GetEndpointUrl("User");
-        var dto = Mapper.Map<EditUserModel, EditUserDto>(_model);
+        var dto = Mapper.Map<EditUserModel, EditUserCommand>(_model);
         try
         {
-            await ApiService.Put<UserDto, EditUserDto>(uri, dto);
+            await ApiService.Put<UserDto, EditUserCommand>(uri, dto);
             return true;
         }
         catch(ApiServiceException abe)

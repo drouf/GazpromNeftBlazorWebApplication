@@ -1,6 +1,5 @@
 using Blazored.Modal;
 using GazpromNeftBlazorWebApplication;
-using GazpromNeftBlazorWebApplication.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using GazpromNeftBlazorWebApplication.Components.Pages;
@@ -16,8 +15,8 @@ builder.Services.AddBlazoredModal();
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 builder.Services.AddTransient<ApiService, GazpromNeftApiService>();
 builder.Services.AddSingleton(x => new ApiEndpointManagerService() 
-    { ApiEndpoints = new List<ApiEndpoint>() { 
-        new ApiEndpoint() { EndpointName = "User", EndpointUrl = "http://172.19.0.3:8080/User"} 
+    { ApiEndpoints = new List<ApiEndpoint>() {
+        new ApiEndpoint() { EndpointName = "User", EndpointUrl = "http://172.16.0.3:8080/User"} 
     } 
 });
 

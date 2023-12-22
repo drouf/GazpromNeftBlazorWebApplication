@@ -1,7 +1,6 @@
 ﻿@using AutoMapper
 @using GazpromNeftBlazorWebApplication.DTO
 @using GazpromNeftBlazorWebApplication.Exceptions
-@using GazpromNeftBlazorWebApplication.Models
 @using GazpromNeftBlazorWebApplication.Services
 @using GazpromNeftBlazorWebApplication.ViewModels
 <div class="fields-enter-component__container">
@@ -29,7 +28,7 @@
     [Inject] public required ApiEndpointManagerService ApiEndpoints { get; set; }
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
-    private List<ValidationErrorModel> _errors = new List<ValidationErrorModel>();
+    private List<ValidationErrorDto> _errors = new List<ValidationErrorDto>();
 
     protected override void OnInitialized()
     {
@@ -50,15 +49,15 @@
     private async Task<bool> DeleteUser()
     {
         var uri = ApiEndpoints.GetEndpointUrl("User");
-        var dto = Mapper.Map<DeleteUserModel, DeleteUserDto>(_model);
+        var dto = Mapper.Map<DeleteUserModel, DeleteUserCommand>(_model);
         try
         {
-            await ApiService.Delete<DeleteUserDto>(uri, dto);
+            await ApiService.Delete<DeleteUserCommand>(uri, dto);
             return true;
         }
-        catch (InternalServerErrorException isee)
+        catch (InternalServerErrorException ex)
         {
-            Console.WriteLine(isee);
+            Console.WriteLine(ex);
             var errorModal = Modal.Show<ErrorModal>("Произошла внутренняя ошибка сервера");
             var result = await errorModal.Result;
             if (result.Confirmed || result.Cancelled)
@@ -67,9 +66,9 @@
             }
             return false;
         }
-        catch (HttpRequestException hrex)
+        catch (HttpRequestException ex)
         {
-            Console.WriteLine(hrex);
+            Console.WriteLine(ex);
             var errorModal = Modal.Show<ErrorModal>("Произошла ошибка во время выполнения HTTP-запроса");
             var result = await errorModal.Result;
             if (result.Confirmed || result.Cancelled)

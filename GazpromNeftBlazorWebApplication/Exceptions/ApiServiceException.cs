@@ -1,9 +1,9 @@
-﻿using GazpromNeftBlazorWebApplication.Models;
+﻿using GazpromNeftBlazorWebApplication.DTO;
 
 namespace GazpromNeftBlazorWebApplication.Exceptions
 {
     public class ApiServiceException : Exception
     {
-        public IEnumerable<ValidationErrorModel> Errors { get; set; } = new List<ValidationErrorModel>();
+        public IEnumerable<ValidationErrorDto> Errors { get; set; } = new List<ValidationErrorDto>();
     }
 }

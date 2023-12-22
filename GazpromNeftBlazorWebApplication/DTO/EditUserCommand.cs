@@ -2,7 +2,7 @@
 
 namespace GazpromNeftBlazorWebApplication.DTO
 {
-    public class EditUserDto
+    public class EditUserCommand
     {
         public long Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
